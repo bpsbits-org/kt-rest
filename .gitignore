@@ -7,6 +7,7 @@ target/
 /.idea/*
 !/.idea/runConfigurations
 !/.idea/runConfigurations/*
+*.iml
 
 ### Eclipse ###
 .apt_generated
