@@ -6,7 +6,7 @@ import java.util.*
 
 /**
  * Functions for generating and managing HTTP cookies.
- * Please note that path of cookies is set to "/" always.
+ * Please note that the path of cookies is set to "/" always.
  * @see [NewCookie] See [NewCookie](https://docs.oracle.com/javaee/7/api/javax/ws/rs/core/NewCookie.html) for more information.
  */
 @Suppress("unused")
@@ -22,12 +22,18 @@ class CookieUtil {
          * A cookie's expiration date is a signal to the browser that it should remove the cookie.
          * @param name The cookie's name.
          * @param httpOnly Determines if JavaScript is prohibited from accessing the value of a cookie.
-         * @param secure If `true`, the cookie is exclusively transmitted  over an encrypted request using the HTTPS protocol.
+         * @param secure If `true`, the cookie is exclusively transmitted over an encrypted request using the HTTPS protocol.
+         * @param sameSite Specifies the SameSite attribute for the cookie.
          * @see [NewCookie] See [NewCookie](https://docs.oracle.com/javaee/7/api/javax/ws/rs/core/NewCookie.html) for more information.
          */
-        fun expired(name: String, httpOnly: Boolean = false, secure: Boolean = false): NewCookie {
+        fun expired(
+            name: String,
+            httpOnly: Boolean = false,
+            secure: Boolean = false,
+            sameSite: NewCookie.SameSite = NewCookie.SameSite.STRICT
+        ): NewCookie {
             return NewCookie.Builder(name).value("expired").path("/")
-                .httpOnly(httpOnly).secure(secure)
+                .httpOnly(httpOnly).secure(secure).sameSite(sameSite)
                 .expiry(Date(LocalDate.parse("1970-01-01").toEpochDay())).build()
         }
 
@@ -36,11 +42,19 @@ class CookieUtil {
          * @param name The cookie's name.
          * @param value The value of the cookie.
          * @param httpOnly Determines if JavaScript is prohibited from accessing the value of a cookie.
-         * @param secure If `true`, the cookie is exclusively transmitted  over an encrypted request using the HTTPS protocol.
+         * @param secure If `true`, the cookie is exclusively transmitted over an encrypted request using the HTTPS protocol.
+         * @param sameSite Specifies the SameSite attribute for the cookie.
          * @see [NewCookie] See [NewCookie](https://docs.oracle.com/javaee/7/api/javax/ws/rs/core/NewCookie.html) for more information.
          */
-        fun new(name: String, value: String, httpOnly: Boolean = false, secure: Boolean = false): NewCookie {
-            return NewCookie.Builder(name).value(value).path("/").httpOnly(httpOnly).secure(secure).build()
+        fun new(
+            name: String,
+            value: String,
+            httpOnly: Boolean = false,
+            secure: Boolean = false,
+            sameSite: NewCookie.SameSite = NewCookie.SameSite.STRICT
+        ): NewCookie {
+            return NewCookie.Builder(name).value(value).path("/")
+                .httpOnly(httpOnly).secure(secure).sameSite(sameSite).build()
         }
 
     }
