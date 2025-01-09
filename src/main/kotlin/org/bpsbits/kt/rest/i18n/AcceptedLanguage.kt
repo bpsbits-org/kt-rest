@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * @property language Language code.
  * @property q Q-factor weighting. Determines the order of priority.
  * @see [org.bpsbits.kt.rest.utils.string.parseAcceptedLanguages]
- * @see mozilla.org <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language" targer="_blank">Accept-Language</a>
+ * @see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language" targer="_blank">Accept-Language</a>
  */
 @Serializable
 data class AcceptedLanguage(

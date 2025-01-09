@@ -12,7 +12,7 @@ import org.bpsbits.kt.rest.commons.Tomcat
  * Extracts cookie value.
  * @param cookieName Name of the cookie.
  * @return Value of given cookie or an empty string if not found.
- * @see oracle.com <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 fun ContainerRequestContext.cookieValue(cookieName: String): String {
     val cookies: Map<String, Cookie> = this.cookies
@@ -23,7 +23,7 @@ fun ContainerRequestContext.cookieValue(cookieName: String): String {
  * Extracts header value.
  * @param headerName Name of the header.
  * @return Value of given header or an empty string if not found.
- * @see oracle.com <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 fun ContainerRequestContext.headerValue(headerName: String): String {
     return this.getHeaderString(headerName) ?: ""
@@ -32,7 +32,7 @@ fun ContainerRequestContext.headerValue(headerName: String): String {
 /**
  * Returns value of the Tomcat session cookie.
  * @return Value of the Tomcat session cookie or an empty string if not set.
- * @see oracle.com <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 val ContainerRequestContext.tomcatSessionId: String
     get() = this.cookieValue(Tomcat.SESSION_COOKIE)
@@ -40,7 +40,7 @@ val ContainerRequestContext.tomcatSessionId: String
 /**
  * Returns value of the PHP session cookie.
  * @return Value of the PHP session cookie or an empty string if not set.
- * @see oracle.com <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 val ContainerRequestContext.phpSessionId: String
     get() = this.cookieValue(PHP.SESSION_COOKIE)
@@ -48,7 +48,7 @@ val ContainerRequestContext.phpSessionId: String
 /**
  * Returns a boolean indicating whether this request was made using a secure channel, such as HTTPS.
  * @return Returns `true` if this request was made using a secure channel, such as HTTPS.
- * @see oracle.com <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 val ContainerRequestContext.isSSL: Boolean
     get() {
