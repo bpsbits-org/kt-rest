@@ -2,7 +2,7 @@ package org.bpsbits.kt.rest.prototypes.rest
 
 import io.quarkus.runtime.annotations.RegisterForReflection
 import io.vertx.core.http.HttpServerRequest
-import io.vertx.mutiny.pgclient.PgPool
+import io.vertx.mutiny.sqlclient.Pool
 import io.vertx.mutiny.sqlclient.Tuple
 import jakarta.ws.rs.core.Response
 import org.bpsbits.kt.rest.commons.QuarkusApp
@@ -95,7 +95,7 @@ interface BasicRequestHandler {
      * @param defaultResult the default value to return if the function returns null
      */
     fun pgFunctionResponse(
-        pgPool: PgPool,
+        pgPool: Pool,
         function: String,
         tuple: Tuple?,
         defaultResult: String = "[]"

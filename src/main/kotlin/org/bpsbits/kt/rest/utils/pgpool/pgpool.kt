@@ -2,7 +2,7 @@
 
 package org.bpsbits.kt.rest.utils.pgpool
 
-import io.vertx.mutiny.pgclient.PgPool
+import io.vertx.mutiny.sqlclient.Pool
 import io.vertx.mutiny.sqlclient.Tuple
 import org.bpsbits.kt.rest.utils.string.intoPgFunctionQuery
 import kotlin.text.ifEmpty
@@ -13,14 +13,14 @@ import kotlin.text.ifEmpty
  * @param tuple Optional parameters for the function.
  * @param defaultResult Default result to be returned if the function returns null.
  */
-fun PgPool.functionQueryAsString(
+fun Pool.functionQueryAsString(
     function: String,
     tuple: Tuple?,
     defaultResult: String = "[]"
 ): String {
     val size = tuple?.size() ?: 0
     val query = function.intoPgFunctionQuery(size, "::text as res;")
-    var res = if (tuple != null) {
+    val res = if (tuple != null) {
         this.preparedQuery(query).execute(tuple).await().indefinitely().first().getString(0)
     } else {
         this.preparedQuery(query).execute().await().indefinitely().first().getString(0)
