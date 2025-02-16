@@ -6,7 +6,7 @@
 
     <groupId>org.bpsbits</groupId>
     <artifactId>kt-rest</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <name>Quarkus Toolbox</name>
     <description>
         A collection of supplemental resources and features for developing
@@ -110,7 +110,6 @@
                     <mainClass>MainKt</mainClass>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -168,7 +167,7 @@
                     <pluginsConfiguration>
                         <org.jetbrains.dokka.base.DokkaBase>
                             <footerMessage>
-                                <![CDATA[2024 <a href="https://bpsbits.org/kt-rest/">bpsbits.org</a>]]></footerMessage>
+                                <![CDATA[2025 <a href="https://bpsbits.org/kt-rest/">bpsbits.org</a>]]></footerMessage>
                             <separateInheritedMembers>true</separateInheritedMembers>
                         </org.jetbrains.dokka.base.DokkaBase>
                     </pluginsConfiguration>
@@ -257,11 +256,6 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.uuid</groupId>
-            <artifactId>java-uuid-generator</artifactId>
-            <version>5.1.0</version>
-        </dependency>
-        <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
             <version>4.5.13</version>
@@ -269,7 +263,7 @@
         <dependency>
             <groupId>org.bpsbits</groupId>
             <artifactId>kt-toolbox</artifactId>
-            <version>1.1.0</version>
+            <version>2.5.1</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
