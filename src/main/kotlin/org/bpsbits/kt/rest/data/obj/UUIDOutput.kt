@@ -2,7 +2,7 @@ package org.bpsbits.kt.rest.data.obj
 
 import kotlinx.serialization.Serializable
 import org.bpsbits.kt.rest.serializers.UUIDSerializer
-import org.bpsbits.kt.rest.utils.UUIDv7
+import org.bpsbits.kt.toolbox.utils.uuid.UUIDv7
 import java.util.*
 
 /**

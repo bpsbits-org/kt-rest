@@ -5,7 +5,7 @@ import jakarta.ws.rs.WebApplicationException
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.bpsbits.kt.rest.utils.UUIDv7
+import org.bpsbits.kt.toolbox.utils.uuid.UUIDv7
 import java.io.File
 
 /**
