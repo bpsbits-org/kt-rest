@@ -11,6 +11,7 @@ import org.bpsbits.kt.rest.utils.brh.acceptedISO6391Languages
 import org.bpsbits.kt.rest.utils.brh.cookieValue
 import org.bpsbits.kt.rest.utils.brh.headerValue
 import org.bpsbits.kt.rest.utils.pgpool.functionQueryAsString
+import org.bpsbits.kt.rest.utils.pgpool.procedureQuery
 
 /**
  * Provides some basic functionality for handling HTTP requests.
@@ -88,20 +89,37 @@ interface BasicRequestHandler {
     }
 
     /**
-     * Executes a PostgreSQL function and returns the result as a [Response].
-     * @param pgPool the PostgreSQL pool to use.
-     * @param function the name of the function to execute.
-     * @param tuple the optional parameters for the function.
-     * @param defaultResult the default value to return if the function returns null
+     * Calls a PostgreSQL function and returns the result as a [Response].
+     *
+     * @param pgPool The database connection used to execute the function.
+     * @param function The name of the PostgreSQL function to call.
+     * @param tuple Optional input values for the function.
+     * @param defaultResult A fallback value to return if the PostgreSQL function does not give any result.
+     *
+     * @return A [Response] that contains the result of the function call.
      */
     fun pgFunctionResponse(
         pgPool: Pool,
         function: String,
-        tuple: Tuple?,
+        tuple: Tuple? = null,
         defaultResult: String = "[]"
     ): Response {
         val fnResult = pgPool.functionQueryAsString(function, tuple, defaultResult)
         return buildResponse(fnResult)
+    }
+
+    /**
+     * Executes a PostgreSQL procedure and returns a response indicating success.
+     *
+     * @param pgPool The database connection pool used to call the procedure.
+     * @param procedure The name of the PostgreSQL procedure to execute.
+     * @param tuple Optional parameters to pass to the procedure.
+     *
+     * @return A response object confirming the successful execution of the procedure.
+     */
+    fun pgProcedureResponse(pgPool: Pool, procedure: String, tuple: Tuple? = null): Response {
+        pgPool.procedureQuery(procedure, tuple)
+        return buildResponse(true)
     }
 
 }
