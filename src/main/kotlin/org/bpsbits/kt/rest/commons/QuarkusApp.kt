@@ -107,7 +107,7 @@ class QuarkusApp {
             }
 
         /**
-         * Returns the path of directory where uploads are stored.
+         * Returns the path of the directory where uploads are stored.
          */
         val uploadsDirPath: String
             get() {
@@ -182,7 +182,7 @@ class QuarkusApp {
             }
 
         /**
-         * Returns the name of the query variable, that passes the language code to the application.
+         * Returns the name of the query variable that passes the language code to the application.
          */
         val langDetectQuery: String
             get() {
