@@ -14,7 +14,7 @@ Add dependency into `pom.xml`.
 <dependency>
     <groupId>org.bpsbits</groupId>
     <artifactId>kt-rest</artifactId>
-    <version>2.0.0</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 
