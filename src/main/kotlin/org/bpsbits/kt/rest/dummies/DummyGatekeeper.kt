@@ -8,7 +8,7 @@ import org.bpsbits.kt.rest.exceptions.ForbiddenException
 import org.bpsbits.kt.rest.prototypes.security.GateKeeper
 
 /**
- * Dummy implementation of [GateKeeper].
+ * Placeholder implementation of [GateKeeper].
  * Throws [ForbiddenException] always.
  */
 @RegisterForReflection

@@ -7,7 +7,7 @@ import org.bpsbits.kt.rest.exceptions.UnauthorizedException
 import org.bpsbits.kt.rest.prototypes.security.IdentityInspector
 
 /**
- * Dummy implementation of [IdentityInspector].
+ * Placeholder implementation of [IdentityInspector].
  * Throws [UnauthorizedException] always
  */
 @RegisterForReflection

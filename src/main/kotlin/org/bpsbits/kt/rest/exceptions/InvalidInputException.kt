@@ -8,7 +8,7 @@ import jakarta.ws.rs.core.Response
  *
  * The request cannot be fulfilled due to the given invalid data.
  *
- * Helps to specify more accurately the cause of problem instead of using generic [WebApplicationException].
+ * Helps to specify the cause of a problem more accurately instead of using generic [WebApplicationException].
  */
 @Suppress("unused")
 class InvalidInputException(
