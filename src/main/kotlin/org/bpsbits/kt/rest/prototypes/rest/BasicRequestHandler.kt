@@ -38,7 +38,7 @@ interface BasicRequestHandler {
     /**
      * Tries to determine the language of the request.
      *
-     * Behaviour depends on `app.lang.*` configuration properties.
+     * Behavior depends on `app.lang.*` configuration properties.
      */
     val detectedLanguage: ISO6391Code
         get() {
@@ -68,16 +68,6 @@ interface BasicRequestHandler {
                 return ISO6391Code.resolve(acceptedLangFromHeader.first().language)
             }
             return ISO6391Code.resolve(QuarkusApp.primaryLang)
-        }
-
-    /**
-     * Retrieves the identity token from the request.
-     */
-    val identityToken: String
-        get() {
-            val tokenName = QuarkusApp.identityTokenName
-            return listOf(cookieValue(tokenName), headerValue(tokenName))
-                .firstOrNull { it.isNotBlank() } ?: ""
         }
 
     /**

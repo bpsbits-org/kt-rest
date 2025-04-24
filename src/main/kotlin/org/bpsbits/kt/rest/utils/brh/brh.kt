@@ -9,6 +9,8 @@ import org.bpsbits.kt.rest.data.obj.AppInfo
 import org.bpsbits.kt.rest.i18n.AcceptedLanguage
 import org.bpsbits.kt.rest.prototypes.rest.BasicRequestHandler
 import org.bpsbits.kt.rest.utils.CookieUtil
+import org.bpsbits.kt.rest.utils.hsr.clientIP
+import org.bpsbits.kt.rest.utils.hsr.sessionHash
 import org.bpsbits.kt.rest.utils.string.parseAcceptedLanguagesISO6391
 
 /**
@@ -18,7 +20,7 @@ import org.bpsbits.kt.rest.utils.string.parseAcceptedLanguagesISO6391
  */
 val BasicRequestHandler.clientIP: String
     get() {
-        return this.request?.remoteAddress()?.hostAddress().toString()
+        return this.request?.clientIP ?: "unknown"
     }
 
 /**
@@ -72,7 +74,7 @@ fun BasicRequestHandler.newExpiredCookie(name: String, httpOnly: Boolean = false
  * Returns the value for the given header.
  * @param name The header's name.
  * @param default The value to return if the header isn't given
- * @return The value for the given header.If no header is provided, an empty string is returned instead.
+ * @return The value for the given header. If no header is provided, an empty string is returned instead.
  * @see [BasicRequestHandler]
  */
 fun BasicRequestHandler.headerValue(name: String, default: String = ""): String {
@@ -91,7 +93,7 @@ val BasicRequestHandler.acceptedISO6391Languages: List<AcceptedLanguage>
 
 /**
  * Returns the ISO639 1 code of the first accepted language from the request.
- * @return ISO639 1 code of first accepted language.
+ * @return ISO639 1 code of the first accepted language.
  * @see [BasicRequestHandler]
  */
 val BasicRequestHandler.firstAcceptedISO6391Language: String
@@ -120,4 +122,13 @@ val BasicRequestHandler.appInfo: AppInfo
             dev = QuarkusApp.isDev,
             ssl = isSSL
         )
+    }
+
+/**
+ * Retrieves the identity token from the request.
+ * @see [BasicRequestHandler]
+ */
+val BasicRequestHandler.identityToken: String
+    get() {
+        return request?.sessionHash?.toString() ?: ""
     }
