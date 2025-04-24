@@ -7,11 +7,14 @@ import jakarta.ws.rs.core.Cookie
 import org.bpsbits.kt.rest.commons.PHP
 import org.bpsbits.kt.rest.commons.QuarkusApp
 import org.bpsbits.kt.rest.commons.Tomcat
+import org.bpsbits.kt.toolbox.utils.string.md5AsUUID
+import org.bpsbits.kt.toolbox.utils.uuid.UUIDv7
+import java.util.UUID
 
 /**
  * Extracts cookie value.
  * @param cookieName Name of the cookie.
- * @return Value of given cookie or an empty string if not found.
+ * @return Value of a given cookie or an empty string if not found.
  * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 fun ContainerRequestContext.cookieValue(cookieName: String): String {
@@ -22,7 +25,7 @@ fun ContainerRequestContext.cookieValue(cookieName: String): String {
 /**
  * Extracts header value.
  * @param headerName Name of the header.
- * @return Value of given header or an empty string if not found.
+ * @return Value of a given header or an empty string if not found.
  * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 fun ContainerRequestContext.headerValue(headerName: String): String {
@@ -56,12 +59,76 @@ val ContainerRequestContext.isSSL: Boolean
     }
 
 /**
- * Returns the value of the identity token.
- * If the token is not set, returns an empty string.
+ * Extracts and validates session hash from an identity token
+ * @return UUID from a valid token, null if missing or invalid
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ */
+val ContainerRequestContext.sessionHash: UUID?
+    get() {
+        val tokenName = QuarkusApp.identityTokenName
+        val tokenValue = (getHeaderString(tokenName)?.trim()
+            ?: cookies[tokenName]?.value?.trim())
+            ?.also { token ->
+                headers.putSingle(tokenName, token)
+            } ?: ""
+        if (UUIDv7.isStringUUIDv7(tokenValue)) {
+            return tokenValue.md5AsUUID()
+        }
+        return null
+    }
+
+/**
+ * Extracts and validates session hash from an identity token
+ * @return UUID as string from a valid token, empty string if missing or invalid
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
  */
 val ContainerRequestContext.identityToken: String
     get() {
-        val tokenName = QuarkusApp.identityTokenName
-        return listOf(cookieValue(tokenName), headerValue(tokenName))
-            .firstOrNull { it.isNotBlank() } ?: ""
+        return this.sessionHash?.toString() ?: ""
     }
+
+/**
+ * Gets the client's IP address.
+ * Falls back to localhost (127.0.0.1) if the request is from localhost, otherwise returns "unknown".
+ * Checks headers in order: X-Forwarded-For, X-Real-IP, Proxy-Client-IP, HTTP_X_FORWARDED_FOR, HTTP_CLIENT_IP
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ */
+val ContainerRequestContext.clientIP: String
+    get() {
+        val headers = listOfNotNull(
+            getHeaderString("X-Forwarded-For")?.split(",")?.firstOrNull()?.trim(),
+            getHeaderString("X-Real-IP")?.trim(),
+            getHeaderString("Proxy-Client-IP")?.trim(),
+            getHeaderString("HTTP_X_FORWARDED_FOR")?.trim(),
+            getHeaderString("HTTP_CLIENT_IP")?.trim()
+        )
+        headers.forEachIndexed { index, value -> println("Header[$index]: $value") }
+        return headers.firstOrNull { it.isNotBlank() && it != "unknown" }
+            ?: if (getHeaderString("Host")?.contains("localhost") == true) "127.0.0.1" else "unknown"
+    }
+
+/**
+ * Gets the client's User-Agent string or returns "unknown" if not present.
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ */
+val ContainerRequestContext.userAgent: String
+    get() = getHeaderString("User-Agent") ?: "unknown"
+
+/**
+ * Client request metadata including IP and User-Agent.
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ */
+val ContainerRequestContext.clientInfo
+    get() = mapOf(
+        "ip" to clientIP,
+        "agent" to userAgent
+    )
+
+/**
+ * Sets or removes the identity owner ID in request headers.
+ * @see <a href="https://docs.oracle.com/javaee/7/api/javax/ws/rs/container/ContainerRequestContext.html">ContainerRequestContext</a>
+ */
+fun ContainerRequestContext.setIdentityOwner(ownerId: UUID?) = ownerId.also { id ->
+    if (id != null) headers.putSingle(QuarkusApp.SESSION_OWNER_HEADER, id.toString())
+    else headers.remove(QuarkusApp.SESSION_OWNER_HEADER)
+}
