@@ -7,6 +7,7 @@ import jakarta.ws.rs.container.ResourceInfo
 import org.bpsbits.kt.rest.annotations.ExclusiveAccess
 import org.bpsbits.kt.rest.annotations.IdentifiedAccess
 import kotlin.reflect.full.createInstance
+import org.bpsbits.kt.rest.utils.crc.setIdentityOwner
 
 /**
  * Basic access control filter.
@@ -20,13 +21,11 @@ interface SimpleAccessFilter : ContainerRequestFilter {
     var resourceInfo: ResourceInfo
 
     override fun filter(requestContext: ContainerRequestContext) {
-        val restrictedAccess = resourceInfo.resourceMethod
-            .annotations.any { it is ExclusiveAccess }
+        requestContext.setIdentityOwner(null)
+        val restrictedAccess = resourceInfo.resourceMethod.annotations.any { it is ExclusiveAccess }
         // Check that the client is authorized to access the resource
         if (restrictedAccess) {
-            println("AccessFilter: Limited access")
-            val gateKeeperInfo = resourceInfo.resourceMethod.annotations
-                .find { it is ExclusiveAccess } as ExclusiveAccess
+            val gateKeeperInfo = resourceInfo.resourceMethod.annotations.find { it is ExclusiveAccess } as ExclusiveAccess
             val authorizer = gateKeeperInfo.identityInspector.createInstance()
             authorizer.approve(requestContext, resourceInfo, gateKeeperInfo.messageUnauthorized)
             val gateKeeper = gateKeeperInfo.gatekeeper.createInstance()
@@ -34,12 +33,9 @@ interface SimpleAccessFilter : ContainerRequestFilter {
             return
         }
         // Check that the client is authenticated
-        val authenticatedOnly = resourceInfo.resourceMethod
-            .annotations.any { it is IdentifiedAccess }
+        val authenticatedOnly = resourceInfo.resourceMethod.annotations.any { it is IdentifiedAccess }
         if (authenticatedOnly) {
-            println("AccessFilter: Authenticated client only")
-            val authorizerInfo = resourceInfo.resourceMethod.annotations
-                .find { it is IdentifiedAccess } as IdentifiedAccess
+            val authorizerInfo = resourceInfo.resourceMethod.annotations.find { it is IdentifiedAccess } as IdentifiedAccess
             val authorizer = authorizerInfo.authorizer.createInstance()
             authorizer.approve(requestContext, resourceInfo, authorizerInfo.message)
         }

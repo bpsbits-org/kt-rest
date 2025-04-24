@@ -26,6 +26,7 @@ class QuarkusApp {
         const val CONF_UPLOADS_DIR: String = "app.uploads.dir"
         const val CONF_IDENTITY_TOKEN: String = "app.identity.token.name"
         const val DEFAULT_IDENTITY_TOKEN: String = "X-API-Identity-Token"
+        const val SESSION_OWNER_HEADER: String = "X-Internal-Identity-Owner"
 
         /**
          * Name of the application.
