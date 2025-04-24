@@ -14,7 +14,7 @@ import kotlin.text.ifEmpty
  * @param tuple Optional parameters to pass to the function.
  * @param defaultResult A fallback value to return if the function doesn’t provide a result.
  *
- * @return The result from the database function as a string, or the default value if no result is available.
+ * @return The result from the database functions as a string, or the default value if no result is available.
  */
 fun Pool.functionQueryAsString(
     function: String,
