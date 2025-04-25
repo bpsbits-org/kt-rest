@@ -1,6 +1,7 @@
 package org.bpsbits.kt.rest.prototypes.security
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import io.vertx.core.http.HttpServerRequest
 import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.container.ResourceInfo
 
@@ -13,8 +14,9 @@ fun interface IdentityInspector {
 
     fun approve(
         requestContext: ContainerRequestContext,
+        httpServerRequest: HttpServerRequest,
         resourceInfo: ResourceInfo,
-        message: String
+        message: String,
     )
 
 }

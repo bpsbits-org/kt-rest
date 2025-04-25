@@ -102,7 +102,6 @@ val ContainerRequestContext.clientIP: String
             getHeaderString("HTTP_X_FORWARDED_FOR")?.trim(),
             getHeaderString("HTTP_CLIENT_IP")?.trim()
         )
-        headers.forEachIndexed { index, value -> println("Header[$index]: $value") }
         return headers.firstOrNull { it.isNotBlank() && it != "unknown" }
             ?: if (getHeaderString("Host")?.contains("localhost") == true) "127.0.0.1" else "unknown"
     }

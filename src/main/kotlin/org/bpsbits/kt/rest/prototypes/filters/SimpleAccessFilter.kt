@@ -1,6 +1,7 @@
 package org.bpsbits.kt.rest.prototypes.filters
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import io.vertx.core.http.HttpServerRequest
 import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.container.ContainerRequestFilter
 import jakarta.ws.rs.container.ResourceInfo
@@ -8,6 +9,7 @@ import org.bpsbits.kt.rest.annotations.ExclusiveAccess
 import org.bpsbits.kt.rest.annotations.IdentifiedAccess
 import kotlin.reflect.full.createInstance
 import org.bpsbits.kt.rest.utils.crc.setIdentityOwner
+import org.bpsbits.kt.rest.utils.hsr.setIdentityOwner
 
 /**
  * Basic access control filter.
@@ -20,14 +22,18 @@ interface SimpleAccessFilter : ContainerRequestFilter {
     @Suppress("MemberVisibilityCanBePrivate")
     var resourceInfo: ResourceInfo
 
+    @Suppress("MemberVisibilityCanBePrivate")
+    var httpServerRequest: HttpServerRequest
+
     override fun filter(requestContext: ContainerRequestContext) {
         requestContext.setIdentityOwner(null)
+        httpServerRequest.setIdentityOwner(null)
         val restrictedAccess = resourceInfo.resourceMethod.annotations.any { it is ExclusiveAccess }
         // Check that the client is authorized to access the resource
         if (restrictedAccess) {
             val gateKeeperInfo = resourceInfo.resourceMethod.annotations.find { it is ExclusiveAccess } as ExclusiveAccess
             val authorizer = gateKeeperInfo.identityInspector.createInstance()
-            authorizer.approve(requestContext, resourceInfo, gateKeeperInfo.messageUnauthorized)
+            authorizer.approve(requestContext, httpServerRequest, resourceInfo, gateKeeperInfo.messageUnauthorized)
             val gateKeeper = gateKeeperInfo.gatekeeper.createInstance()
             gateKeeper.approve(requestContext, resourceInfo, gateKeeperInfo)
             return
@@ -37,7 +43,7 @@ interface SimpleAccessFilter : ContainerRequestFilter {
         if (authenticatedOnly) {
             val authorizerInfo = resourceInfo.resourceMethod.annotations.find { it is IdentifiedAccess } as IdentifiedAccess
             val authorizer = authorizerInfo.authorizer.createInstance()
-            authorizer.approve(requestContext, resourceInfo, authorizerInfo.message)
+            authorizer.approve(requestContext, httpServerRequest, resourceInfo, authorizerInfo.message)
         }
     }
 

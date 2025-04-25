@@ -1,6 +1,7 @@
 package org.bpsbits.kt.rest.dummies
 
 import io.quarkus.runtime.annotations.RegisterForReflection
+import io.vertx.core.http.HttpServerRequest
 import jakarta.ws.rs.container.ContainerRequestContext
 import jakarta.ws.rs.container.ResourceInfo
 import org.bpsbits.kt.rest.exceptions.UnauthorizedException
@@ -15,8 +16,9 @@ class DummyIdentityInspector : IdentityInspector {
 
     override fun approve(
         requestContext: ContainerRequestContext,
+        httpServerRequest: HttpServerRequest,
         resourceInfo: ResourceInfo,
-        message: String
+        message: String,
     ) {
         throw UnauthorizedException(message)
     }
