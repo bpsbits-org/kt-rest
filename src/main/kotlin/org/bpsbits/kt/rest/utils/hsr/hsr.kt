@@ -56,8 +56,21 @@ val HttpServerRequest.sessionHash: UUID?
  */
 val HttpServerRequest.sessionOwnerId: UUID?
     get() = sessionHash?.let {
-        getHeader(QuarkusApp.SESSION_OWNER_HEADER)
-            ?.trim()
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { UUID.fromString(it) }
+        return getHeader(QuarkusApp.SESSION_OWNER_HEADER)?.trim()?.takeIf { it.isNotEmpty() }?.let { UUID.fromString(it) }
     }
+
+/**
+ * Sets or removes the identity token value in request headers.
+ */
+fun HttpServerRequest.setIdentityToken(token: String?): String? = token.also { tk ->
+    if (!tk.isNullOrEmpty()) headers().add(QuarkusApp.identityTokenName, tk)
+    else headers().remove(QuarkusApp.identityTokenName)
+}
+
+/**
+ * Sets or removes the identity owner ID in request headers.
+ */
+fun HttpServerRequest.setIdentityOwner(ownerId: UUID?): UUID? = ownerId.also { id ->
+    if (id != null) headers().add(QuarkusApp.SESSION_OWNER_HEADER, ownerId.toString())
+    else headers().remove(QuarkusApp.SESSION_OWNER_HEADER)
+}
